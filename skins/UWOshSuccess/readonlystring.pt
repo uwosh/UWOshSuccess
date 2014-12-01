@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone">
+
+  <body>
+
+    <metal:view_macro define-macro="view">
+      <h3 style="text-decoration: underline" metal:define-macro="string-field-view"
+          tal:attributes="id string:parent-fieldname-$fieldName" tal:content="accessor" />
+    </metal:view_macro>
+
+    <metal:define define-macro="edit">
+      <metal:use use-macro="field_macro | here/widgets/field/macros/edit">
+        <h3 style="text-decoration: underline" metal:fill-slot="widget_body" tal:content="value" /> 
+      </metal:use>
+    </metal:define>
+
+    <div metal:define-macro="search">
+      <div metal:use-macro="here/widgets/string/macros/edit" />
+    </div>
+
+  </body>
+
+</html>
+

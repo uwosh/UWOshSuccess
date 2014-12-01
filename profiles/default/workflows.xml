@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+ <object name="UWOshSuccessBluesheetWorkflow" meta_type="Workflow"/>
+ <bindings>
+  <type type_id="BlueSheet">
+   <bound-workflow workflow_id="UWOshSuccessBluesheetWorkflow" />
+  </type>
+ </bindings>
+<object name="UWOshSuccessStudentApplicationWorkflow" meta_type="Workflow"/>
+ <bindings>
+  <type type_id="StudentApplication">
+   <bound-workflow workflow_id="UWOshSuccessStudentApplicationWorkflow" />
+  </type>
+ </bindings>
+<object name="UWOshSuccessDropboxFolderWorkflow" meta_type="Workflow"/>
+ <bindings>
+  <type type_id="DropboxFolder">
+   <bound-workflow workflow_id="UWOshSuccessDropboxFolderWorkflow" />
+  </type>
+ </bindings>
+</object>

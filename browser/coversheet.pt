@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+  <div metal:fill-slot="main">
+    <div style="font-size: large; font-weight: bold">
+    	<p>Course Number: <span tal:content="view/courseNumber">courseNumber</span><br />
+        Course Name: <span tal:content="view/courseName">courseName</span><br />
+        Course Section: <span tal:content="view/courseSection">courseSection</span><br />
+	Professor: <span tal:content="view/professorName">professor</span><br />
+	Test Date: <span tal:content="view/testDate">testDate</span></p>
+    </div>
+    <tal:main-macro metal:define-macro="main">
+      <div style="font-size: large">
+	<table class="listing nosort">
+	  <tbody>
+
+	    <tr>
+	      <th>Last</th>
+	      <th>First</th>
+	      <th>Test Time</th>
+	      <th>Reader Name</th>
+	      <th>Test Completed?</th>
+	    </tr>
+
+	    <tal:items tal:repeat="student view/students">
+	      <tr>
+		<td><div tal:content="student/lastName">lastName</div></td>
+		<td><div tal:content="student/firstName">firstName</div></td>
+		<td><div tal:content="student/testTime">testTime</div></td>
+		<td><div tal:content="student/readerName">readerName</div></td>
+		<td><div><input type="checkbox" /> Yes</div></td>
+	      </tr>
+	    </tal:items>
+	      
+	  </tbody>
+	</table>
+
+      </div>
+
+      <div class="documentActions">
+	<h5 class="hiddenStructure">Document Actions</h5>
+	<ul>
+	  <li id="document-action-print">
+	    <a title="" href="javascript:this.print();">Print this</a>
+	  </li>
+	</ul>
+      </div>
+    </tal:main-macro>
+  </div>
+</body>
+</html>

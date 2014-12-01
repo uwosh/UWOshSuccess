@@ -1,0 +1,70 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="Products.UWOshSuccess">
+
+    <browser:page
+      for="..content.interfaces.IBlueSheet"
+      name="cover-sheet"
+      permission="zope2.View"
+      class=".coversheet.CoverSheet"
+      template="coversheet.pt"
+      />
+
+    <browser:page
+      for="*"
+      name="tests-today"
+      permission="zope2.View"
+      attribute="testsToday"
+      class=".report.Report"
+      />
+
+    <browser:page
+      for="*"
+      name="tests-this-week"
+      permission="zope2.View"
+      attribute="testsThisWeek"
+      class=".report.Report"
+      />
+
+    <browser:page
+      for="*"
+      name="tests-next-week"
+      permission="zope2.View"
+      attribute="testsNextWeek"
+      class=".report.Report"
+      />
+
+   <browser:page
+     for="*"
+     name="bluesheets-pending-faculty-approval"
+     permission="zope2.View"
+     attribute="blueSheetsPendingFacultyApproval"
+     class=".report.Report"
+     />
+
+   <browser:page
+     for="*"
+     name="bluesheets-assigned-to-reader"
+     permission="zope2.View"
+     attribute="blueSheetsAssignedToReader"
+     class=".report.Report"
+     />
+
+   <browser:page
+     for="*"
+     name="bluesheets-without-an-assigned-reader"
+     permission="zope2.View"
+     attribute="blueSheetsWithoutAnAssignedReader"
+     class=".report.Report"
+     />
+
+   <browser:page
+     for="*"
+     name="all-bluesheets"
+     permission="zope2.View"
+     attribute="allBlueSheets"
+     class=".report.Report"
+     />
+
+</configure>

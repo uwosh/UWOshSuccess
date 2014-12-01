@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<object name="portal_actions" meta_type="Plone Actions Tool"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <action-provider name="portal_workflow"/>
+ <action-provider name="portal_types"/>
+ <action-provider name="portal_actions"/>
+
+ <object name="portal_tabs" meta_type="CMF Action Category">
+  <property name="title"></property>
+
+  <object name="add_student_application" meta_type="CMF Action">
+   <property name="title">Add Student Application</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/students/createObject?type_name=StudentApplication</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and not member.has_role('UWOshSuccess.Student')</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="add_bluesheet" meta_type="CMF Action">
+   <property name="title">Add BlueSheet</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/bluesheets/createObject?type_name=BlueSheet</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role(['UWOshSuccess.Director', 'UWOshSuccess.OfficeStaff', 'Manager', 'UWOshSuccess.Student'])</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="add_vocabulary_items" meta_type="CMF Action">
+   <property name="title">Add Vocabulary Items</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/add_vocabulary_form</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role(['UWOshSuccess.Director', 'UWOshSuccess.OfficeStaff', 'Manager'])</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="pending_bluesheets" meta_type="CMF Action">
+   <property name="title">BlueSheets Pending My Approval</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/@@bluesheets-pending-faculty-approval</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role('UWOshSuccess.Faculty')</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="assigned_reader_bluesheets" meta_type="CMF Action">
+   <property name="title">BlueSheets Assigned To Me</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/@@bluesheets-assigned-to-reader</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role('UWOshSuccess.Reader')</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="unassigned_reader_bluesheets" meta_type="CMF Action">
+   <property name="title">BlueSheets Without An Assigned Reader</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/@@bluesheets-without-an-assigned-reader</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role(['UWOshSuccess.Director', 'Manager', 'UWOshSuccess.Reader', 'UWOshSuccess.OfficeStaff'])</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="all_bluesheets" meta_type="CMF Action">
+   <property name="title">All BlueSheets</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/@@all-bluesheets</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role(['UWOshSuccess.Director', 'Manager', 'UWOshSuccess.OfficeStaff'])</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <object name="reports_tab" meta_type="CMF Action">
+   <property name="title">Reports</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${here/portal_url}/reports_landing_page</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: member and member.has_role(['UWOshSuccess.Director', 'Manager', 'UWOshSuccess.OfficeStaff'])</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+ </object>
+
+
+ <object name="document_actions" meta_type="CMF Action Category">
+  <property name="title"></property>
+  <object name="sendto" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Send this</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:$object_url/sendto_form</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr"></property>
+   <property name="permissions">
+    <element value="Allow sendto"/>
+   </property>
+   <property name="visible">False</property>
+  </object>
+ </object>
+
+ <object name="object" meta_type="CMF Action Category">
+  <property name="title"></property>
+  <object name="cover_sheet" meta_type="CMF Action">
+   <property name="title">Cover Sheet</property>
+   <property name="description"></property>
+   <property name="url_expr">string:${object/absolute_url}/@@cover-sheet</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: object.portal_type == 'BlueSheet' and
+                                   member and member.has_role(['UWOshSuccess.OfficeStaff', 'UWOshSuccess.Director', 'Manager'])</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+ </object>
+
+</object>

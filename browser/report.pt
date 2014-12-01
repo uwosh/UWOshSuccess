@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<metal:block fill-slot="top_slot" tal:define="dummy python:request.set('disable_border',1)" />
+
+<body>
+  <div metal:fill-slot="main">
+    <h1 class="documentFirstHeading" tal:content="view/reportTitle">Report Title</h1>
+    
+    <tal:main-macro metal:define-macro="main">
+      <div>
+
+	<table class="listing nosort">
+	  <tbody>
+
+	    <tr>
+	      <th>BlueSheet</th>
+	      <th>Course Number - Name - Faculty</th>
+	      <th>Accommodations Requested</th>
+	      <th>Review State</th>
+	    </tr>
+
+	    <tal:items tal:repeat="result view/results">
+	      <tr class="odd">
+		<td><a href="" tal:attributes="href result/url" tal:content="result/title">url</a></td>
+		<td><div tal:content="result/courseNumberNameFaculty">courseNumberNameFaculty</div></td>
+		<td><div tal:content="result/testAccommodationsRequested">testAccommodationsRequested</div></td>
+		<td><div tal:content="result/reviewState">reviewState</div></td>
+	      </tr>
+	    </tal:items>
+		
+	    <tr class="portletItem" tal:condition="not: view/results">
+	      <td>No pending forms.</td>
+	      <td />
+	      <td />
+	      <td />
+	    </tr>
+		    
+	  </tbody>
+	</table>
+
+      </div>
+    </tal:main-macro>
+  </div>
+</body>
+</html>

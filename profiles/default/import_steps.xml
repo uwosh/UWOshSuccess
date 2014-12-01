@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<import-steps>
+
+ <import-step 
+    id="UWOshSuccess-Install-Vocabularies" 
+    handler="Products.UWOshSuccess.setuphandlers.installVocabularies"
+    title="Install Vocabularies for UWOshSuccess"
+    version="2008-10-21T13:22:32.598710">
+   <dependency step="UWOshSuccess-QI-dependencies"/>
+   Installs the vocabulary files into vocabulary library for UWOshSuccess
+ </import-step>
+
+ <import-step 
+    id="UWOshSuccess-Update-RoleMappings" 
+    handler="Products.UWOshSuccess.setuphandlers.updateRoleMappings"
+    title="Update Workflow role mappings for UWOshSuccess"
+    version="2008-10-21T13:22:32.598710">
+   <dependency step="UWOshSuccess-QI-dependencies"/>
+   updates the workflow role mappings for UWOshSuccess
+ </import-step>
+
+ <import-step 
+    id="UWOshSuccess-Add-Custom-Groups" 
+    handler="Products.UWOshSuccess.setuphandlers.installCustomGroups"
+    title="Add the groups required for the product."
+    version="2009-06-12T16:53:32.598710">
+   <dependency step="UWOshSuccess-QI-dependencies"/>
+   installs the custom groups
+ </import-step>
+
+ <import-step 
+    id="UWOshSuccess-postInstall" 
+    handler="Products.UWOshSuccess.setuphandlers.postInstall"
+    title="manual coded post-install for UWOshSuccess"
+    version="2008-10-21T13:22:32.598710">
+   <dependency step="UWOshSuccess-QI-dependencies"/>
+   manual coded post-install for UWOshSuccess
+ </import-step>
+
+</import-steps>
+ 

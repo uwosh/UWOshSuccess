@@ -1,0 +1,463 @@
+<?xml version="1.0"?>
+<dc-workflow workflow_id="UWOshSuccessBluesheetWorkflow"
+             title="UWOshSuccessBluesheetWorkflow"
+             state_variable="review_state"
+             initial_state="private">
+ <permission>View</permission>
+ <permission>List folder contents</permission>
+ <permission>Access contents information</permission>
+ <permission>Modify portal content</permission>
+ <permission>Add portal content</permission>
+ <permission>UWOshSuccess: edit faculty fields</permission>
+ <permission>UWOshSuccess: edit office fields</permission>
+ <permission>UWOshSuccess: edit reader field</permission>
+ <permission>UWOshSuccess: edit student fields</permission>
+
+ <state state_id="private"
+        title="Private">
+  <exit-transition transition_id="submitToInstructor"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="pendingInstructorReview"
+        title="Pending Instructor Review">
+  <exit-transition transition_id="submitToOffice"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="pendingOfficeReview"
+        title="Pending Office Review">
+  <exit-transition transition_id="approveBlueSheet"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+ 
+ <state state_id="blueSheetApproved"
+        title="BlueSheet Approved">
+  <exit-transition transition_id="pickUpTest"/>
+  <exit-transition transition_id="beginWaitingForInstructorToDropOffTest"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="waitingForInstructorToDropOffTest"
+        title="Waiting For Instructor To Drop-Off Test">
+  <exit-transition transition_id="testDroppedOff"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+ 
+ <state state_id="testNeedsToBePickedUp"
+        title="Test Needs To Be Picked Up">
+  <exit-transition transition_id="testPickedUp"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="testInOffice"
+        title="Test In Office">
+  <exit-transition transition_id="administerTest"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="testAdministered"
+        title="Test Administered">
+  <exit-transition transition_id="prepareTestForReturn"/>
+  <exit-transition transition_id="beginWaitingForInstructorToPickupTest"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>UWOshSuccess.Reader</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+  <state state_id="waitingForInstructorToPickupTest"
+        title="Waiting For Instructor To Pickup Test">
+  <exit-transition transition_id="returnTestToInstructor"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="testNeedsToBeReturned"
+        title="Test Needs To Be Returned">
+  <exit-transition transition_id="returnTestToInstructor"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="testWasReturnedToInstructor"
+        title="Test Was Returned To Instructor">
+  <exit-transition transition_id="archiveBluesheet"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <state state_id="archived"
+        title="Archived">
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>Owner</permission-role>
+   <permission-role>UWOshSuccess.LocalFaculty</permission-role>
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+ 		  acquired="False">
+  </permission-map>
+ </state>
+
+ <transition transition_id="submitToInstructor"
+             title="Submit To Instructor"
+             new_state="pendingInstructorReview"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Submit To Instructor</action>
+  <guard>
+     <guard-expression>here/isTestDateValidAndIfNotShowErrorMessage</guard-expression>
+  </guard>
+ </transition>
+
+ <transition transition_id="submitToOffice"
+             title="Submit to Office"
+             new_state="pendingOfficeReview"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Submit To Office</action>
+  <guard>
+     <guard-expression>here/areReturnAndPickupFieldsValidAndIfNotShowErrorMessage</guard-expression>
+     <guard-role>UWOshSuccess.LocalFaculty</guard-role>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="approveBlueSheet"
+             title="Approve BlueSheet"
+             new_state="blueSheetApproved"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Approve BlueSheet</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="beginWaitingForInstructorToDropOffTest"
+             title="Begin Waiting For Instructor To Drop-Off Test"
+             new_state="waitingForInstructorToDropOffTest"
+             trigger="AUTOMATIC"
+             before_script=""
+             after_script="">
+  <guard>
+     <guard-expression>here/getFacultyWillDropOffTest</guard-expression>
+  </guard>
+ </transition>
+
+ <transition transition_id="pickUpTest"
+             title="Pick Up Test"
+             new_state="testNeedsToBePickedUp"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Pick Up Test</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.LocalFaculty</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="testPickedUp"
+             title="Test Picked Up"
+             new_state="testInOffice"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Test Picked Up</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="testDroppedOff"
+             title="Test Dropped-Off"
+             new_state="testInOffice"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Test Dropped Off</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="administerTest"
+             title="Administer Test"
+             new_state="testAdministered"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Administer Test</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+<transition transition_id="beginWaitingForInstructorToPickupTest"
+             title="Begin Waiting For Instructor To Pickup Test"
+             new_state="waitingForInstructorToPickupTest"
+             trigger="AUTOMATIC"
+             before_script=""
+             after_script="">
+  <guard>
+     <guard-expression>here/getFacultyWillPickupTest</guard-expression>
+  </guard>
+ </transition>
+
+ <transition transition_id="prepareTestForReturn"
+             title="Prepare Test For Return"
+             new_state="testNeedsToBeReturned"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Prepare Test For Return</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="returnTestToInstructor"
+             title="Return Test To Instructor"
+             new_state="testWasReturnedToInstructor"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Return Test To Instructor</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+
+ <transition transition_id="archiveBluesheet"
+             title="Archive Bluesheet"
+             new_state="archived"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Archive Bluesheet</action>
+  <guard>
+     <guard-role>Manager</guard-role>
+     <guard-role>UWOshSuccess.Director</guard-role>
+     <guard-role>UWOshSuccess.OfficeStaff</guard-role>
+  </guard>
+ </transition>
+ 
+ <variable variable_id="action" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>The last transition</description>
+  <default>
+   <expression>transition/getId|nothing</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="actor" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>The ID of the user who performed the last transition</description>
+  <default>
+   <expression>user/getId</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="comments" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>Comments about the last transition</description>
+  <default>
+   <expression>python:state_change.kwargs.get('comment', '')</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="review_history" for_catalog="False"
+           for_status="False" update_always="False">
+  <description>Provides access to workflow history</description>
+  <default>
+   <expression>state_change/getHistory</expression>
+  </default>
+  <guard>
+   <guard-permission>Request review</guard-permission>
+   <guard-permission>Review portal content</guard-permission>
+  </guard>
+ </variable>
+ <variable variable_id="time" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>Time of the last transition</description>
+  <default>
+   <expression>state_change/getDateTime</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <!-- We dont use workflow scripts any more, we use subscribers -->
+</dc-workflow>

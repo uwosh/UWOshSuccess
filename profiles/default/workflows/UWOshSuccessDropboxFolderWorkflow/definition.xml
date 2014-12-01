@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<dc-workflow workflow_id="UWOshSuccessDropboxFolderWorkflow"
+             title="UWOshSuccessDropboxFolderWorkflow"
+             state_variable="review_state"
+             initial_state="open">
+ <permission>View</permission>
+ <permission>List folder contents</permission>
+ <permission>Access contents information</permission>
+ <permission>Modify portal content</permission>
+ <permission>UWOshSuccess: Add BlueSheet</permission>
+ <permission>UWOshSuccess: Add StudentApplication</permission>
+
+ <state state_id="open"
+        title="Open">
+  <exit-transition transition_id="close"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Access contents information"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Member</permission-role>
+   <permission-role>Authenticated</permission-role>
+  </permission-map>
+  <permission-map name="List folder contents"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="UWOshSuccess: Add BlueSheet"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>UWOshSuccess.Student</permission-role>
+  </permission-map>
+  <permission-map name="UWOshSuccess: Add StudentApplication"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Member</permission-role>
+   <permission-role>Authenticated</permission-role>
+  </permission-map>
+ </state>
+
+<state state_id="closed"
+        title="Closed">
+  <exit-transition transition_id="open"/>
+  <permission-map name="View"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Modify portal content"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Access contents information"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Member</permission-role>
+   <permission-role>Authenticated</permission-role>
+  </permission-map>
+  <permission-map name="List folder contents"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="UWOshSuccess: Add BlueSheet"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="UWOshSuccess: Add StudentApplication"
+                  acquired="False">
+   <permission-role>UWOshSuccess.Director</permission-role>
+   <permission-role>UWOshSuccess.OfficeStaff</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+ </state>
+
+ <transition transition_id="open"
+             title="Open"
+             new_state="open"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Open</action>
+  <guard>
+    <guard-permission>Modify portal content</guard-permission>
+  </guard>
+ </transition>
+
+ <transition transition_id="close"
+             title="Close"
+             new_state="closed"
+             trigger="USER"
+             before_script=""
+             after_script="">
+  <action url="" category="workflow">Close</action>
+  <guard>
+    <guard-permission>Modify portal content</guard-permission>
+  </guard>
+ </transition>
+
+ <variable variable_id="action" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>The last transition</description>
+  <default>
+   <expression>transition/getId|nothing</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="actor" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>The ID of the user who performed the last transition</description>
+  <default>
+   <expression>user/getId</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="comments" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>Comments about the last transition</description>
+  <default>
+   <expression>python:state_change.kwargs.get('comment', '')</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="review_history" for_catalog="False"
+           for_status="False" update_always="False">
+  <description>Provides access to workflow history</description>
+  <default>
+   <expression>state_change/getHistory</expression>
+  </default>
+  <guard>
+   <guard-permission>Request review</guard-permission>
+   <guard-permission>Review portal content</guard-permission>
+  </guard>
+ </variable>
+ <variable variable_id="time" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>Time of the last transition</description>
+  <default>
+   <expression>state_change/getDateTime</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+
+</dc-workflow>

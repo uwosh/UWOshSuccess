@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)" />
+
+<body>
+  <metal:slot metal:fill-slot="body" i18n:domain="cmf_default">
+
+    <h1 class="documentFirstHeading">Reports</h1>
+
+    <p>Click on the links below for specific reports:</p>
+
+    <ul>
+      <li><a href="" tal:attributes="href string:${here/portal_url}/tests-today">Tests Today</a></li>
+      <li><a href="" tal:attributes="href string:${here/portal_url}/tests-this-week">Tests This Week</a></li>
+      <li><a href="" tal:attributes="href string:${here/portal_url}/tests-next-week">Tests Next Week</a></li>
+    </ul>
+
+  </metal:slot>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <subscriber
+      for=".content.interfaces.IBlueSheet
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".subscribers.sendNotificationEmails"
+  />
+
+  <subscriber
+      for=".content.interfaces.IStudentApplication
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".subscribers.sendNotificationEmails"
+  />
+
+  <subscriber
+      for=".content.interfaces.IStudentApplication
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".subscribers.addNewStudentToStudentsGroup"
+  />
+
+  <subscriber
+      for=".content.interfaces.IBlueSheet
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".subscribers.copyRequestedAccommodationsToGrantedAccommodations"
+  />
+
+  <subscriber
+      for=".content.interfaces.IBlueSheet
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".subscribers.addLocalFacultyRole"
+  />
+
+</configure>

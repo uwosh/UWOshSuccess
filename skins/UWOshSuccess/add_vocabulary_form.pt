@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)" />
+
+<body>
+
+  <metal:slot metal:fill-slot="body" i18n:domain="cmf_default">
+    <h1 class="documentFirstHeading">Add Vocabulary Items</h1>
+    <h4>To add vocabulary (drop down values for form fields):</h4>
+    <ol>
+      <li>Click on one of the links below.</li>
+      <li>Enter same text (no special charecters) in both key and value fields.</li>
+      <li>Click on save.</li>
+    </ol>
+
+    <br />
+    
+    <ul>
+      <li><a tal:attributes="href string:${here/portal_url}/portal_vocabularies/UWOshSuccessAccommodations/createObject?type_name=SimpleVocabularyTerm">Add Accommodations</a>.</li>
+      <li><a tal:attributes="href string:${here/portal_url}/portal_vocabularies/UWOshSuccessAlwaysAllowableAccommodations/createObject?type_name=SimpleVocabularyTerm">Add Always Allowable Accommodations</a>.</li>
+      <li><a tal:attributes="href string:${here/portal_url}/portal_vocabularies/UWOshBuildings/createObject?type_name=SimpleVocabularyTerm">Add Buildings</a>.</li>
+      <li><a tal:attributes="href string:${here/portal_url}/portal_vocabularies/UWOshSuccess/createObject?type_name=SimpleVocabularyTerm"> Add Test Locations</a>.</li>
+    </ul>
+  </metal:slot>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+Browser tests for UWOshSuccess
+==========================
+
+    >>> self.portal.error_log._ignored_exceptions = self.portal.error_log._ignored_exceptions + ('TraversalError',)
+    >>> browser = self.browser
+
+First lets set up some test users::
+
+    >>> self.addReadersToSite([('testreader1', 'Test Reader 1'), ('testreader2', 'TestReader 2')])
+    >>> self.addFacultyToSite([('booned', 'Daniel Boone'), ('jonesk', 'Kathy Jones')])
+    >>> self.addOfficeStaffToSite([('staff1', 'Staff Member 1'),])
+
+Open the home page and, since we are not logged in yet, if it is viewable
+that means it was published correctly::
+
+    >>> browser.open(portal.absolute_url())
+    >>> browser.title
+    'Welcome to the UW Oshkosh Project Success Site. ... Project Success Site'
+
+Now let's login as a student::
+    
+    >>> self.browserLogin('test_user_1_')
+
+First we add a student application, the application should be partially filled in already but we'll fill in the rest ::
+
+    >>> browser.getLink('Add Student Application').click()
+    >>> browser.getControl(name='email').value
+    'test_user_1_@uwosh.edu'
+    >>> browser.getControl(name='fullName').value
+    'John Doe'
+    >>> browser.getControl(name='emplid').value
+    '0123456'
+    >>> browser.getControl(name='homePhone').value = '920-123-4567'
+    >>> browser.getControl(name='mobilePhone').value = '920-987-6543'
+    >>> browser.getControl(name='otherPhone').value = '920-564-7382'
+    >>> browser.getControl('Save').click()
+    >>> 'Changes saved.' in browser.contents
+    True
+
+And submit it to the office::
+
+    >>> studentAppUrl = portal.absolute_url() + '/students/john-doe-student-application'
+    >>> browser.open(studentAppUrl + '/content_status_modify?workflow_action=submitToOffice')
+    >>> 'Item state changed.' in browser.contents
+    True
+
+Login in as office staff and approve::
+
+    >>> self.browserLogin('staff1')
+    >>> browser.open(studentAppUrl  + '/content_status_modify?workflow_action=approveApplication')
+    >>> 'Item state changed.' in browser.contents
+    True
+
+And we revert back to being a student::
+
+    >>> self.browserLogin('test_user_1_')
+
+We'll attempt to add a bluesheet and make sure that it automatically fills in any
+information it can::
+
+    >>> browser.getLink('Add BlueSheet').click()
+    >>> browser.getControl(name='email').value
+    'test_user_1_@uwosh.edu'
+    >>> browser.getControl(name='fullName').value
+    'John Doe'
+    >>> 'COMP SCI 331 - 001C - Programming Languages - Daniel Boone - booned@uwosh.edu'  in browser.getControl(name='courseNumberNameFaculty').value
+    True
+
+Then we'll fill in every field that a student should have access to::
+
+    >>> browser.getControl(name='testDate_year').value = ['2009']
+    >>> browser.getControl(name='testDate_month').value = ['12']
+    >>> browser.getControl(name='testDate_day').value = ['11']
+    >>> browser.getControl(name='testDate_hour').value = ['08']
+    >>> browser.getControl(name='testDate_minute').value = ['00']
+    >>> browser.getControl(name='testDate_ampm').value = ['AM']
+    >>> browser.getControl(name='testAccommodationsRequested:list').value = ['calculator', 'computer', 'extraTime', 'humanReader']
+    >>> browser.getControl(name='studentComments').value = 'Good workflow app! It was a pleasure to use!'
+
+Then try a few fields we shouldn't have access to at this point and watch them fail::
+
+     >>> self.assertRaises(LookupError, browser.getControl, name='facultyWillDropOffTest:boolean')
+     >>> self.assertRaises(LookupError, browser.getControl, name='testAccommodationsGranted:list')
+     >>> self.assertRaises(LookupError, browser.getControl, name='testReaderAssigned')
+     >>> self.assertRaises(LookupError, browser.getControl, name='testARRoom')
+
+Then we'll save it::
+
+    >>> browser.getControl('Save').click()
+    >>> 'Changes saved.' in browser.contents
+    True
+
+We should be able to view the blueSheet put there should be no Cover Sheet tab::
+
+    >>> blueSheetUrl = self.portal.absolute_url() + '/bluesheets/john-doe-blue-sheet'
+    >>> browser.open(blueSheetUrl)
+    >>> 'John Doe Blue Sheet\n        </h1>' in browser.contents
+    True
+    >>> from mechanize import LinkNotFoundError
+    >>> self.assertRaises(LinkNotFoundError, browser.getLink, 'Cover Sheet')
+
+Finally we submit to the instructor::
+
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=submitToInstructor')
+    >>> 'Item state changed.' in browser.contents
+    True
+
+Now we'll become the correct faculty member for the blueSheet's selected class::
+    
+    >>> self.browserLogin('booned')
+
+The blueSheet should show up the 'my pending bluesheets' view::
+
+    >>> self.browser.getLink('BlueSheets Pending My Approval').click()
+    >>> '<h1 class="documentFirstHeading">BlueSheets Pending My Approval</h1>' in browser.contents
+    True
+    >>> browser.contents.count('<tr class="odd">')
+    1
+    >>> 'bluesheets/john-doe-blue-sheet">John Doe Blue Sheet</a></td>' in browser.contents
+    True
+    >>> browser.contents.count('<td>No pending forms.</td>')
+    0
+
+We should be able to edit the granted accommodations field and the requested accommodations should be the defaults.
+This looks weird because extraTime seems like it should be part of the testAccommodationsGranted:list value.
+Because no one can deny extraTime it is disabled in the browser. That makes it not show up in the list value but it will be added automatically when the value is set. It really doesn't matter at this point, it's just a nice GUI thing::
+    
+    >>> browser.open(blueSheetUrl + '/edit')
+    >>> browser.getControl('Extra Time').disabled
+    True
+    >>> browser.getControl('Calculator').disabled
+    False
+    >>> browser.getControl('Computer').disabled
+    False
+    >>> browser.getControl(name='testAccommodationsGranted:list').value
+    ['calculator', 'computer']
+
+As the instructor we should be able to set all of the faculty fields::
+
+    >>> browser.getControl(name='facultyWillDropOffTest:boolean').value = True
+    >>> browser.getControl(name='testAccommodationsGranted:list').value = ['calculator']
+    >>> browser.getControl(name='facultyWillPickupTest:boolean').value = True
+    >>> browser.getControl(name='facultyComments').value = 'A most excellent bluesheet'
+
+We should not be able to set the other fields::
+
+     >>> self.assertRaises(LookupError, browser.getControl, name='testAccommodationsRequested:list')
+     >>> self.assertRaises(LookupError, browser.getControl, name='studentComments')
+     >>> self.assertRaises(LookupError, browser.getControl, name='testReaderAssigned')
+     >>> self.assertRaises(LookupError, browser.getControl, name='testARRoom')
+
+Then we'll save it:
+
+    >>> browser.getControl('Save').click()
+    >>> 'Changes saved.' in browser.contents
+    True
+
+We should be able to view the blueSheet and there should still be no Cover Sheet tab::
+
+    >>> browser.open(blueSheetUrl)
+    >>> 'John Doe Blue Sheet\n        </h1>' in browser.contents
+    True
+    >>> from mechanize import LinkNotFoundError
+    >>> self.assertRaises(LinkNotFoundError, browser.getLink, 'Cover Sheet')
+
+Finally we submit to the office::
+
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=submitToOffice')
+    >>> 'Item state changed.' in browser.contents
+    True
+
+But if we became a different faculty member we should not be able to edit or view the bluesheet::
+
+    >>> self.browserLogin('jonesk')
+
+Viewing should fail::
+
+    >>> browser.open(blueSheetUrl)
+    >>> 'Insufficient Privileges' in browser.contents
+    True
+    >>> 'You do not have sufficient privileges to view this page' in browser.contents
+    True
+
+Edit should fail::
+
+    >>> from urllib2 import HTTPError
+    >>> self.assertRaises(HTTPError, browser.open, blueSheetUrl + '/edit')
+    >>> 'We\'re sorry, but there seems to be an error' in browser.contents
+    True
+
+Now we become an office staff member to finish it all off::
+
+    >>> self.browserLogin('staff1')
+
+We'll approve the blueSheet::
+    
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=approveBlueSheet')
+    >>> 'Item state changed.' in browser.contents
+    True
+    >>> '<span class="state-waitingForInstructorToDropOffTest">Waiting For Instructor To Drop-Off Test</span>' in browser.contents
+    True
+
+Now the "bluesheets without an assigned reader" view should show this new one::
+
+    >>> browser.open(portal.absolute_url() + '/@@bluesheets-without-an-assigned-reader')
+    >>> '<h1 class="documentFirstHeading">BlueSheets Without An Assigned Reader</h1>' in browser.contents
+    True
+    >>> browser.contents.count('<tr class="odd">')
+    1
+    >>> 'bluesheets/john-doe-blue-sheet">John Doe Blue Sheet</a></td>' in browser.contents
+    True
+    >>> browser.contents.count('<td>No pending forms.</td>')
+    0
+
+And the cover sheet view show create a cover sheet for our use::
+
+    >>> browser.open(blueSheetUrl)
+    >>> browser.getLink('Cover Sheet').click()
+    >>> 'Course Number: <span>COMP SCI 331</span>' in browser.contents
+    True
+    >>> 'Course Section: <span>001C</span>' in browser.contents
+    True
+    >>> 'Course Name: <span>Programming Languages</span>' in browser.contents
+    True
+    >>> 'Professor: <span>Daniel Boone</span>' in browser.contents
+    True
+    >>> 'Test Date: <span>12/11/2009</span>' in browser.contents
+    True
+    >>> '<td><div>John</div></td>' in browser.contents
+    True
+    >>> '<td><div>Doe</div></td>' in browser.contents
+    True
+    >>> '<td><div>08:00 AM</div></td>' in browser.contents
+    True
+    >>> '<td><div></div></td>' in browser.contents
+    True
+    >>> browser.contents.count('<td><div><input type="checkbox" /> Yes</div></td>')
+    1
+    >>> ' <a title="" href="javascript:this.print();">Print this</a>' in browser.contents
+    True
+
+We will become a reader::
+
+    >>> self.browserLogin('testreader1')
+
+And sign ourselves up as the reader::
+
+    >>> browser.open(blueSheetUrl + '/edit')
+    >>> browser.getControl(name='testReaderAssigned').options
+    [' ', 'testreader1']
+    >>> browser.getControl(name='testReaderAssigned').value = ['testreader1']
+    >>> browser.getControl('Save').click()
+    >>> 'Changes saved.' in browser.contents
+    True
+
+That bluesheet should now show up in the "bluesheets assigned to me" view and not in the "unassigned bluesheets" view::
+
+    >>> browser.open(portal.absolute_url() + '/@@bluesheets-assigned-to-reader')
+    >>> '<h1 class="documentFirstHeading">BlueSheets Assigned To Me</h1>' in browser.contents
+    True
+    >>> browser.contents.count('<tr class="odd">')
+    1
+    >>> 'bluesheets/john-doe-blue-sheet">John Doe Blue Sheet</a></td>' in browser.contents
+    True
+    >>> browser.contents.count('<td>No pending forms.</td>')
+    0
+
+    >>> browser.open(portal.absolute_url() + '/@@bluesheets-without-an-assigned-reader')
+    >>> '<h1 class="documentFirstHeading">BlueSheets Without An Assigned Reader</h1>' in browser.contents
+    True
+    >>> browser.contents.count('<tr class="odd">')
+    0
+    >>> 'bluesheets/john-doe-blue-sheet">John Doe Blue Sheet</a></td>' in browser.contents
+    False
+    >>> browser.contents.count('<td>No pending forms.</td>')
+    1
+
+When we become the other reader the only person they should not be able to assign the bluesheet to themselves.
+The only  option should be the reader who has already claimed it::
+
+    >>> self.browserLogin('testreader2')
+    >>> browser.open(blueSheetUrl + '/edit')
+    >>> browser.getControl(name='testReaderAssigned').options
+    ['testreader1']
+    >>> from ClientForm import ItemNotFoundError
+    >>> self.assertRaises(ItemNotFoundError, setattr, browser.getControl(name='testReaderAssigned'), 'value', ['testreader2'])
+
+We login as a staff member and move the object throught the rest of the transitions::
+
+    >>> self.browserLogin('staff1')
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=testDroppedOff')
+    >>> 'Item state changed.' in browser.contents
+    True
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=administerTest')
+    >>> 'Item state changed.' in browser.contents
+    True
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=returnTestToInstructor')
+    >>> 'Item state changed.' in browser.contents
+    True
+    >>> browser.open(blueSheetUrl + '/content_status_modify?workflow_action=archiveBluesheet')
+
+If everything went as planned it should end up in the archived state::
+
+    >>> self.browser.open(blueSheetUrl)
+    >>> '<span class="state-archived">Archived</span>' in browser.contents
+    True
+
+A total of 9 emails should have been sent. 2 from student app transitions and 7 from bluesheet transitions::
+
+    >>> self.portal.MailHost.numberOfSentEmails
+    9
+
+The End.
